@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Avatar, useChatContext } from "stream-chat-react";
+
 import { InviteIcon } from "../assets";
 
 const ListContainer = ({ children }) => {
@@ -19,12 +20,14 @@ const UserItem = ({ user, setSelectedUsers }) => {
 
   const handleSelect = () => {
     if (selected) {
-      setSelectedUsers((ps) => ps.filter((prev) => prev !== user.id));
+      setSelectedUsers((prevUsers) =>
+        prevUsers.filter((prevUser) => prevUser !== user.id)
+      );
     } else {
-      setSelectedUsers((p) => [...p, user.id]);
+      setSelectedUsers((prevUsers) => [...prevUsers, user.id]);
     }
 
-    setSelected((p) => !p);
+    setSelected((prevSelected) => !prevSelected);
   };
 
   return (
@@ -33,12 +36,7 @@ const UserItem = ({ user, setSelectedUsers }) => {
         <Avatar image={user.image} name={user.fullName || user.id} size={32} />
         <p className="user-item__name">{user.fullName || user.id}</p>
       </div>
-
-      {selected ? (
-        <InviteIcon />
-      ) : (
-        <div className="user-item__invite-empty"></div>
-      )}
+      {selected ? <InviteIcon /> : <div className="user-item__invite-empty" />}
     </div>
   );
 };
@@ -74,10 +72,8 @@ const UserList = ({ setSelectedUsers }) => {
       setLoading(false);
     };
 
-    if (client) {
-      getUsers();
-    }
-  });
+    if (client) getUsers();
+  }, []);
 
   if (error) {
     return (
@@ -87,12 +83,12 @@ const UserList = ({ setSelectedUsers }) => {
         </div>
       </ListContainer>
     );
-  }  if (listEmpty) {
+  }
+
+  if (listEmpty) {
     return (
       <ListContainer>
-        <div className="user-list__message">
-          No Users try again.
-        </div>
+        <div className="user-list__message">No users found.</div>
       </ListContainer>
     );
   }
@@ -102,7 +98,7 @@ const UserList = ({ setSelectedUsers }) => {
       {loading ? (
         <div className="user-list__message">Loading users...</div>
       ) : (
-        users.map((user, i) => (
+        users?.map((user, i) => (
           <UserItem
             index={i}
             key={user.id}
