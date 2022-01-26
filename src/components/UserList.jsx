@@ -51,7 +51,7 @@ const UserList = ({ setSelectedUsers }) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const getUsers = async (users) => {
+    const getUsers = async () => {
       if (loading) return;
 
       setLoading(true);
