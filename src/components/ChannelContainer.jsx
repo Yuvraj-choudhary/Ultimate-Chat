@@ -10,7 +10,6 @@ const ChannelContainer = ({
   setIsEditing,
   createType,
 }) => {
-
   if (isCreating) {
     return (
       <div className="channel__container">
